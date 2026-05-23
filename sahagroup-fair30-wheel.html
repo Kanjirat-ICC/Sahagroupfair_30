@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สหกรุ๊ปแฟร์&เฟส ครั้งที่ 30 – วงล้อโชคดี</title>
+
+    <!-- Kanit 900 italic → title | Sriracha → tagline handwriting -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,700;0,900;1,700;1,900&family=Sriracha&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            /* poster sky — white at top, mid-blue lower */
+            background: linear-gradient(180deg,
+                #c8eeff 0%,
+                #7fd4f8 18%,
+                #5ec4f5 40%,
+                #a8dff8 75%,
+                #d6f0ff 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: 'Kanit', sans-serif;
+            overflow-x: hidden;
+            padding-bottom: 50px;
+            position: relative;
+        }
+
+        /* ===== SUN ===== */
+        .sun {
+            position: fixed;
+            top: -80px; right: -80px;
+            width: 260px; height: 260px;
+            background: radial-gradient(circle, #fffcb0 0%, #ffe040 35%, rgba(255,220,0,0) 68%);
+            border-radius: 50%;
+            animation: sun-pulse 4s ease-in-out infinite;
+            pointer-events: none; z-index: 0;
+        }
+        @keyframes sun-pulse {
+            0%,100% { transform: scale(1);    opacity:.85; }
+            50%      { transform: scale(1.1);  opacity:1;   }
+        }
+
+        /* ===== CLOUDS ===== */
+        .cloud {
+            position: fixed;
+            background: #fff;
+            border-radius: 60px;
+            pointer-events: none; z-index: 0;
+        }
+        .cloud::before, .cloud::after {
+            content:''; position:absolute;
+            background:#fff; border-radius:50%;
+        }
+        .c1 { width:180px; height:55px; top:50px;  left:-40px;  opacity:.9;  animation: drift 20s linear infinite; }
+        .c1::before { width:90px;  height:90px;  top:-46px; left:22px; }
+        .c1::after  { width:65px;  height:65px;  top:-32px; left:78px; }
+
+        .c2 { width:140px; height:46px; top:110px; right:-60px; opacity:.75; animation: drift 28s linear infinite reverse; }
+        .c2::before { width:70px; height:70px; top:-36px; left:18px; }
+        .c2::after  { width:52px; height:52px; top:-26px; left:60px; }
+
+        .c3 { width:220px; height:68px; top:14px;  left:42%;   opacity:.6;  animation: drift 34s linear infinite; }
+        .c3::before { width:100px; height:100px; top:-54px; left:28px; }
+        .c3::after  { width:76px;  height:76px;  top:-42px; left:100px; }
+
+        .c4 { width:110px; height:36px; top:80px; left:60%; opacity:.55; animation: drift 22s linear infinite reverse; }
+        .c4::before { width:55px; height:55px; top:-28px; left:14px; }
+        .c4::after  { width:40px; height:40px; top:-20px; left:48px; }
+
+        @keyframes drift {
+            from { transform: translateX(-130%); }
+            to   { transform: translateX(120vw);  }
+        }
+
+        /* ===== BALLOONS ===== */
+        .balloon {
+            position: fixed; bottom:-90px;
+            width:46px; height:60px;
+            border-radius: 50% 50% 50% 50% / 58% 58% 42% 42%;
+            opacity:.82; pointer-events:none; z-index:0;
+            animation: rise linear infinite;
+        }
+        .balloon::after {
+            content:''; position:absolute;
+            bottom:-16px; left:50%; transform:translateX(-50%);
+            width:1px; height:18px; background:rgba(0,0,0,.22);
+        }
+        .b1{background:#FF6B9D;left:4%; animation-duration:10s;animation-delay:0s;}
+        .b2{background:#FFD700;left:14%;animation-duration:13s;animation-delay:2.5s;}
+        .b3{background:#FF6348;left:78%;animation-duration:11s;animation-delay:1s;}
+        .b4{background:#7BED9F;left:88%;animation-duration:15s;animation-delay:4s;}
+        .b5{background:#70A1FF;left:50%;animation-duration:12s;animation-delay:7s;}
+        .b6{background:#FF9F43;left:32%;animation-duration: 9s;animation-delay:5s;}
+        @keyframes rise {
+            from { transform:translateY(0)   rotate(-4deg); opacity:.82; }
+            50%  { transform:translateY(-55vh) rotate(4deg); }
+            to   { transform:translateY(-115vh) rotate(-2deg); opacity:0;  }
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            position: relative; z-index: 2;
+            width: 100%; max-width: 700px;
+            text-align: center;
+            padding: 18px 20px 0;
+        }
+
+        /* --- "สหกรุ๊ป" --- */
+        .title-main {
+            display: block;
+            font-family: 'Kanit', sans-serif;
+            font-weight: 900;
+            font-style: italic;
+            font-size: clamp(4.2em, 13vw, 8em);
+            line-height: .9;
+            color: #E31D0C;
+            /* White stroke to match poster */
+            -webkit-text-stroke: clamp(3px, .8vw, 6px) #ffffff;
+            paint-order: stroke fill;
+            /* Drop shadow */
+            filter: drop-shadow(0 6px 12px rgba(200,20,0,.28));
+            letter-spacing: -2px;
+        }
+
+        /* --- "แฟร์&เฟส" + badge row --- */
+        .sub-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(6px, 2vw, 14px);
+            margin-top: clamp(-10px, -2vw, -6px);
+        }
+
+        .title-sub {
+            font-family: 'Kanit', sans-serif;
+            font-weight: 900;
+            font-style: italic;
+            font-size: clamp(2.6em, 8.5vw, 5.2em);
+            line-height: 1;
+            color: #E31D0C;
+            -webkit-text-stroke: clamp(2px, .6vw, 4px) #ffffff;
+            paint-order: stroke fill;
+            filter: drop-shadow(0 4px 8px rgba(200,20,0,.22));
+            letter-spacing: -1px;
+        }
+
+        /* "ครั้งที่ 30" red circle – matches poster */
+        .badge-30 {
+            flex-shrink: 0;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width:  clamp(60px, 11vw, 88px);
+            height: clamp(60px, 11vw, 88px);
+            border-radius: 50%;
+            background: radial-gradient(circle at 38% 32%, #ff4c2a, #C9200A 65%);
+            border: clamp(2px,  .5vw, 4px) solid #fff;
+            box-shadow: 0 4px 0 rgba(130,15,0,.55), 0 6px 18px rgba(220,30,0,.45);
+            font-family: 'Kanit', sans-serif;
+            font-style: normal;
+            font-weight: 900;
+            color: #fff;
+            font-size: clamp(.6em, 1.6vw, .88em);
+            line-height: 1.25;
+        }
+
+        /* --- tagline + date SAME ROW --- */
+        .middle-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(10px, 3vw, 28px);
+            margin-top: clamp(4px, 1.2vw, 10px);
+            flex-wrap: wrap;
+        }
+
+        /* "ไปด้วยกันนะ" – Sriracha handwriting, italic */
+        .tagline {
+            font-family: 'Sriracha', cursive;
+            font-size: clamp(1.8em, 5.5vw, 3.6em);
+            font-weight: 400;
+            font-style: italic;
+            color: #1a1a1a;
+            position: relative;
+            line-height: 1;
+            text-shadow: 1px 1px 0 rgba(255,255,255,.7);
+        }
+        /* double orange wavy underline from poster */
+        .tagline::before {
+            content: '';
+            position: absolute;
+            bottom: -6px; left: -2%; width: 104%;
+            height: clamp(4px, 1vw, 7px);
+            background: #E86020;
+            border-radius: 4px;
+            transform: rotate(-1.5deg);
+        }
+        .tagline::after {
+            content: '';
+            position: absolute;
+            bottom: -13px; left: 3%; width: 96%;
+            height: clamp(3px, .7vw, 5px);
+            background: #E86020;
+            border-radius: 3px;
+            transform: rotate(-1deg);
+            opacity: .7;
+        }
+
+        /* "25–28" date circle – exactly like poster */
+        .date-circle {
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width:  clamp(100px, 18vw, 148px);
+            height: clamp(100px, 18vw, 148px);
+            border-radius: 50%;
+            background: radial-gradient(circle at 38% 30%, #ff5030, #C9200A 70%);
+            border: clamp(2px, .5vw, 4px) solid rgba(255,255,255,.5);
+            box-shadow: 0 5px 0 rgba(130,15,0,.5), 0 8px 22px rgba(220,30,0,.45);
+            color: #fff;
+            font-family: 'Kanit', sans-serif;
+            font-style: normal;
+            line-height: 1.18;
+            padding: 6px;
+            text-align: center;
+        }
+        .date-num   { font-size: clamp(1.5em, 4vw, 2.5em);  font-weight:900; line-height:1;   }
+        .date-month { font-size: clamp(.72em, 1.8vw, 1.08em); font-weight:700; }
+        .date-venue { font-size: clamp(.58em, 1.4vw, .85em);  font-weight:700; opacity:.92; line-height:1.15; }
+
+        /* ===== WHEEL TITLE BAR ===== */
+        .wheel-title {
+            display: inline-block;
+            margin-top: clamp(14px, 2.5vw, 22px);
+            padding: clamp(10px,1.8vw,15px) clamp(28px,5vw,56px);
+            font-family: 'Kanit', sans-serif;
+            font-size: clamp(1.2em, 3vw, 1.85em);
+            font-weight: 900;
+            font-style: normal;
+            color: #fff;
+            background: linear-gradient(135deg, #ff5030, #C9200A);
+            border-radius: 50px;
+            box-shadow: 0 5px 0 rgba(120,14,0,.55), 0 8px 22px rgba(220,30,0,.4);
+            border: clamp(2px,.5vw,3px) solid rgba(255,255,255,.38);
+            letter-spacing: 2px;
+        }
+
+        /* ===== WHEEL AREA ===== */
+        .wheel-wrap {
+            position: relative; z-index: 2;
+            margin: 18px auto 0;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .outer-ring {
+            position: absolute; border-radius: 50%; background: transparent;
+            box-shadow:
+                0 0 0 8px #fff,
+                0 0 0 14px #FF6348,
+                0 0 0 20px #FFD700,
+                0 0 30px rgba(255,99,72,.4),
+                0 0 60px rgba(255,99,72,.2);
+        }
+        .lights-ring { position: absolute; border-radius: 50%; pointer-events:none; }
+        .light-dot {
+            position: absolute; border-radius: 50%;
+            animation: blink-light 1s ease-in-out infinite alternate;
+        }
+        @keyframes blink-light {
+            from { opacity:.45; box-shadow:none; }
+            to   { opacity:1;   box-shadow:0 0 9px currentColor; }
+        }
+        .pointer-wrap {
+            position: absolute; top:-40px; left:50%;
+            transform: translateX(-50%); z-index:10;
+            display:flex; flex-direction:column; align-items:center;
+        }
+        .pointer-head {
+            width:0; height:0;
+            border-left:24px solid transparent;
+            border-right:24px solid transparent;
+            border-top:52px solid #E31D0C;
+            filter:drop-shadow(0 4px 7px rgba(220,20,0,.7));
+        }
+        .pointer-base {
+            width:16px; height:16px;
+            background:#E31D0C; border-radius:50%;
+            margin-top:-5px; box-shadow:0 0 10px rgba(220,20,0,.8);
+        }
+        #wheelCanvas { display:block; border-radius:50%; }
+
+        /* ===== SPIN BUTTON ===== */
+        .btn-area {
+            position:relative; z-index:2;
+            margin-top:22px;
+            display:flex; flex-direction:column; align-items:center; gap:10px;
+        }
+        #spinBtn {
+            padding: clamp(14px,2.5vw,18px) clamp(54px,10vw,80px);
+            font-family:'Kanit',sans-serif;
+            font-size: clamp(1.2em, 3vw, 1.6em);
+            font-weight:900;
+            background: linear-gradient(135deg,#ff5030,#C9200A,#a81500);
+            color:#fff; border:none; border-radius:50px; cursor:pointer;
+            box-shadow: 0 6px 0 rgba(110,10,0,.6), 0 8px 22px rgba(220,30,0,.45);
+            transition:transform .15s, box-shadow .15s;
+            letter-spacing:2px;
+            text-shadow: 0 2px 5px rgba(0,0,0,.3);
+            border: 3px solid rgba(255,255,255,.28);
+        }
+        #spinBtn:hover:not(:disabled) {
+            transform:translateY(-3px);
+            box-shadow:0 9px 0 rgba(110,10,0,.6), 0 12px 30px rgba(220,30,0,.55);
+        }
+        #spinBtn:active:not(:disabled) {
+            transform:translateY(3px);
+            box-shadow:0 3px 0 rgba(110,10,0,.6), 0 4px 12px rgba(220,30,0,.35);
+        }
+        #spinBtn:disabled { opacity:.45; cursor:not-allowed; transform:none; }
+        #spinCount {
+            color:#444; font-size:.9em; font-weight:700;
+            background:rgba(255,255,255,.72); padding:4px 18px; border-radius:20px;
+        }
+
+        /* ===== RESULT MODAL ===== */
+        #resultOverlay {
+            display:none; position:fixed; inset:0;
+            background:rgba(80,160,220,.38);
+            backdrop-filter:blur(7px); z-index:200;
+            justify-content:center; align-items:center;
+        }
+        #resultOverlay.show { display:flex; }
+        .result-card {
+            background:linear-gradient(160deg,#fff 0%,#fff6ee 100%);
+            border-radius:28px; padding:34px 38px 30px;
+            text-align:center; max-width:420px; width:92%;
+            box-shadow:
+                0 0 0 5px #FF6348,
+                0 0 0 9px #FFD700,
+                0 28px 55px rgba(0,0,0,.28);
+            animation:popIn .45s cubic-bezier(.34,1.56,.64,1) forwards;
+        }
+        @keyframes popIn {
+            from { transform:scale(.3) rotate(-8deg); opacity:0; }
+            to   { transform:scale(1)  rotate(0deg);  opacity:1; }
+        }
+        .result-congrats {
+            font-size:1.85em; font-weight:900; color:#E31D0C;
+            margin-bottom:12px;
+        }
+        .result-logo-wrap {
+            width:210px; height:152px;
+            display:flex; align-items:center; justify-content:center;
+            margin:0 auto 14px;
+            background:#f7f7f7; border-radius:16px;
+            border:3px solid #FFD700; overflow:hidden;
+        }
+        .result-logo-wrap img { max-width:100%; max-height:100%; object-fit:contain; }
+        .result-brand-name { font-size:1.5em; font-weight:900; color:#E31D0C; margin-bottom:6px; }
+        .result-msg { font-size:.94em; color:#555; margin-bottom:20px; font-weight:700; }
+        .result-close {
+            padding:12px 42px;
+            font-family:'Kanit',sans-serif; font-size:1.05em; font-weight:900;
+            background:linear-gradient(135deg,#ff5030,#C9200A);
+            color:#fff; border:none; border-radius:30px; cursor:pointer;
+            box-shadow:0 4px 0 rgba(110,10,0,.55), 0 6px 16px rgba(220,30,0,.4);
+            transition:transform .15s; letter-spacing:1px;
+        }
+        .result-close:hover { transform:translateY(-2px); }
+
+        /* ===== CONFETTI ===== */
+        .confetti-piece {
+            position:fixed; top:-14px; pointer-events:none;
+            animation:confettiFall linear forwards;
+        }
+        @keyframes confettiFall {
+            to { transform:translateY(110vh) rotate(720deg); opacity:0; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Atmosphere -->
+<div class="sun"></div>
+<div class="cloud c1"></div>
+<div class="cloud c2"></div>
+<div class="cloud c3"></div>
+<div class="cloud c4"></div>
+<div class="balloon b1"></div>
+<div class="balloon b2"></div>
+<div class="balloon b3"></div>
+<div class="balloon b4"></div>
+<div class="balloon b5"></div>
+<div class="balloon b6"></div>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+
+    <!-- "สหกรุ๊ป" giant italic red -->
+    <span class="title-main">สหกรุ๊ป</span>
+
+    <!-- "แฟร์&เฟส" + "ครั้งที่ 30" circle -->
+    <div class="sub-row">
+        <span class="title-sub">แฟร์&amp;เฟส</span>
+        <span class="badge-30">ครั้ง<br>ที่&nbsp;30</span>
+    </div>
+
+    <!-- "ไปด้วยกันนะ"  +  date circle (same row, poster-style) -->
+    <div class="middle-row">
+        <span class="tagline">ไปด้วยกันนะ</span>
+        <div class="date-circle">
+            <div class="date-num">25–28</div>
+            <div class="date-month">มิ.ย. 69</div>
+            <div class="date-venue">ไบเทค บางนา<br>ฮอลล์ 98–100</div>
+        </div>
+    </div>
+
+    <!-- Wheel label -->
+    <div class="wheel-title">🎡&ensp;วงล้อโชคดี&ensp;·&ensp;Lucky Wheel&ensp;🎡</div>
+</div>
+
+<!-- ===== WHEEL ===== -->
+<div class="wheel-wrap" id="wheelWrap">
+    <div class="outer-ring"  id="outerRing"></div>
+    <div class="lights-ring" id="lightsRing"></div>
+    <div class="pointer-wrap">
+        <div class="pointer-head"></div>
+        <div class="pointer-base"></div>
+    </div>
+    <canvas id="wheelCanvas"></canvas>
+</div>
+
+<!-- ===== SPIN BUTTON ===== -->
+<div class="btn-area">
+    <button id="spinBtn" onclick="spin()">หมุนเลย!&ensp;🎯</button>
+    <div id="spinCount">หมุนไปแล้ว: <span id="countNum">0</span> ครั้ง</div>
+</div>
+
+<!-- ===== RESULT MODAL ===== -->
+<div id="resultOverlay">
+    <div class="result-card">
+        <div class="result-congrats">🎉 ยินดีด้วย! 🎉</div>
+        <div class="result-logo-wrap"><img id="resultImg" src="" alt=""></div>
+        <div class="result-brand-name" id="resultBrand"></div>
+        <div class="result-msg">คุณได้รับรางวัลจากแบรนด์นี้!</div>
+        <button class="result-close" onclick="closeResult()">ปิด&ensp;✕</button>
+    </div>
+</div>
+
+<script>
+/* ============================================================
+   BRAND DATA
+   ============================================================ */
+const BRANDS = [
+    { name:'Wacoal',           file:'Logowacoal-01-scaled.jpg',       c1:'#B31B4E', c2:'#D4547A' },
+    { name:'Guy Laroche',      file:'Logo-Guy-Laroche-Innerwear.jpg', c1:'#2C2C2C', c2:'#555555' },
+    { name:'BSC\nCosmetology', file:'BSC-Cosmetology.jpeg',           c1:'#B0102E', c2:'#D62B4A' },
+    { name:'Enfant',           file:'Logo-Enfant-Blue.jpg',           c1:'#1E2370', c2:'#3840A8' },
+    { name:'Lacoste',          file:'Lacoste_logo.png',               c1:'#155D2F', c2:'#228B45' },
+];
+
+/* 10 segments, each brand ×2, interleaved */
+const SEG_ORDER = [0,2,4,1,3, 0,2,4,1,3];
+const segments  = SEG_ORDER.map(i => BRANDS[i]);
+const N   = segments.length;
+const ARC = (2 * Math.PI) / N;
+
+/* Canvas */
+const SIZE = Math.min(window.innerWidth - 40, 540);
+const canvas = document.getElementById('wheelCanvas');
+canvas.width = canvas.height = SIZE;
+const ctx = canvas.getContext('2d');
+const CX = SIZE/2, CY = SIZE/2, R = CX - 4;
+
+/* Outer ring sizing */
+const outerRing = document.getElementById('outerRing');
+outerRing.style.cssText +=
+    `width:${SIZE+28}px;height:${SIZE+28}px;left:-14px;top:-14px;`;
+
+/* Bulb lights */
+const lightsRing = document.getElementById('lightsRing');
+const LR = (SIZE + 60) / 2;
+lightsRing.style.cssText +=
+    `width:${SIZE+60}px;height:${SIZE+60}px;left:-30px;top:-30px;`;
+const LIGHT_COLORS = ['#FF6348','#FFD700','#7BED9F','#70A1FF','#FF6B9D','#FF9F43'];
+for (let i = 0; i < 24; i++) {
+    const a   = (2 * Math.PI / 24) * i - Math.PI / 2;
+    const dot = document.createElement('div');
+    dot.className = 'light-dot';
+    const sz = 11;
+    dot.style.cssText =
+        `width:${sz}px;height:${sz}px;` +
+        `left:${LR + LR*Math.cos(a) - sz/2}px;` +
+        `top:${LR  + LR*Math.sin(a) - sz/2}px;` +
+        `background:${LIGHT_COLORS[i%LIGHT_COLORS.length]};` +
+        `color:${LIGHT_COLORS[i%LIGHT_COLORS.length]};` +
+        `animation-delay:${(i*0.04).toFixed(2)}s;`;
+    lightsRing.appendChild(dot);
+}
+
+/* Image cache */
+const imgCache = {};
+BRANDS.forEach(b => {
+    const img = new Image();
+    img.src = b.file;
+    img.onload  = () => { imgCache[b.name] = img;  drawWheel(); };
+    img.onerror = () => { imgCache[b.name] = null; drawWheel(); };
+});
+
+/* ============================================================
+   DRAW
+   ============================================================ */
+let angle = -Math.PI/2 - ARC/2;
+
+function drawWheel() {
+    ctx.clearRect(0, 0, SIZE, SIZE);
+
+    /* gold outer border */
+    ctx.beginPath(); ctx.arc(CX,CY,R+4,0,Math.PI*2);
+    ctx.fillStyle='#FFD700'; ctx.fill();
+
+    ctx.beginPath(); ctx.arc(CX,CY,R+1,0,Math.PI*2);
+    ctx.fillStyle='#fff'; ctx.fill();
+
+    for (let i = 0; i < N; i++) {
+        const seg   = segments[i];
+        const start = angle + i * ARC;
+        const end   = start + ARC;
+        const mid   = start + ARC / 2;
+        const fill  = i % 2 === 0 ? seg.c1 : seg.c2;
+
+        /* slice */
+        ctx.beginPath(); ctx.moveTo(CX,CY);
+        ctx.arc(CX,CY,R,start,end); ctx.closePath();
+        ctx.fillStyle = fill; ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,.5)';
+        ctx.lineWidth = 1.5; ctx.stroke();
+
+        /* logo */
+        const lr = R * 0.60;
+        const lx = CX + lr * Math.cos(mid);
+        const ly = CY + lr * Math.sin(mid);
+        const logoSz = SIZE * 0.125;
+
+        ctx.save();
+        ctx.translate(lx, ly);
+        ctx.rotate(mid + Math.PI / 2);
+
+        const img = imgCache[seg.name];
+        if (img) {
+            /* white circle bg */
+            ctx.beginPath(); ctx.arc(0,0,logoSz/2+6,0,Math.PI*2);
+            ctx.fillStyle='#fff';
+            ctx.shadowColor='rgba(0,0,0,.15)'; ctx.shadowBlur=6;
+            ctx.fill(); ctx.shadowBlur=0;
+            /* clipped image */
+            ctx.save();
+            ctx.beginPath(); ctx.arc(0,0,logoSz/2,0,Math.PI*2); ctx.clip();
+            ctx.drawImage(img,-logoSz/2,-logoSz/2,logoSz,logoSz);
+            ctx.restore();
+        } else {
+            ctx.fillStyle='rgba(255,255,255,.18)';
+            ctx.beginPath(); ctx.arc(0,0,logoSz/2+6,0,Math.PI*2); ctx.fill();
+            ctx.fillStyle='#fff';
+            ctx.font=`bold ${SIZE*.026}px 'Kanit',sans-serif`;
+            ctx.textAlign='center'; ctx.textBaseline='middle';
+            const lines = seg.name.split('\n');
+            const lh = SIZE * .03;
+            lines.forEach((line,li) =>
+                ctx.fillText(line, 0, (li-(lines.length-1)/2)*lh)
+            );
+        }
+        ctx.restore();
+    }
+
+    /* centre hub */
+    const hubR = SIZE * 0.075;
+    const g = ctx.createRadialGradient(CX,CY,0,CX,CY,hubR);
+    g.addColorStop(0,  '#fff');
+    g.addColorStop(.3, '#FFD700');
+    g.addColorStop(.7, '#FF6348');
+    g.addColorStop(1,  '#E31D0C');
+    ctx.beginPath(); ctx.arc(CX,CY,hubR,0,Math.PI*2);
+    ctx.fillStyle=g;
+    ctx.shadowColor='rgba(0,0,0,.3)'; ctx.shadowBlur=12;
+    ctx.fill(); ctx.shadowBlur=0;
+    ctx.strokeStyle='#fff'; ctx.lineWidth=3; ctx.stroke();
+    ctx.beginPath(); ctx.arc(CX,CY,hubR*.42,0,Math.PI*2);
+    ctx.fillStyle='rgba(255,255,255,.65)'; ctx.fill();
+}
+
+drawWheel();
+
+/* ============================================================
+   SPIN
+   ============================================================ */
+let spinning = false, spinCount = 0;
+
+function spin() {
+    if (spinning) return;
+    spinning = true;
+    document.getElementById('spinBtn').disabled = true;
+
+    const targetSeg  = Math.floor(Math.random() * N);
+    const extraRot   = (6 + Math.floor(Math.random() * 5)) * Math.PI * 2;
+    const targetAng  = -(targetSeg * ARC + ARC / 2);
+    const startAng   = angle;
+    const endAng     = startAng - ((startAng - targetAng) % (Math.PI*2)) - extraRot;
+    const duration   = 5800;
+    const t0         = performance.now();
+
+    function tick(t) {
+        const p = Math.min((t-t0)/duration, 1);
+        const e = 1 - Math.pow(1-p, 5);
+        angle = startAng + (endAng - startAng) * e;
+        drawWheel();
+        if (p < 1) { requestAnimationFrame(tick); }
+        else {
+            angle = endAng; spinning = false;
+            spinCount++;
+            document.getElementById('countNum').textContent = spinCount;
+            document.getElementById('spinBtn').disabled = false;
+            showResult(segments[targetSeg]);
+        }
+    }
+    requestAnimationFrame(tick);
+}
+
+/* ============================================================
+   RESULT
+   ============================================================ */
+function showResult(seg) {
+    const brandObj = BRANDS.find(b => b.name === seg.name);
+    const img = imgCache[seg.name];
+    const ri  = document.getElementById('resultImg');
+    if (img && brandObj) { ri.src=brandObj.file; ri.style.display='block'; }
+    else                  { ri.style.display='none'; }
+    document.getElementById('resultBrand').textContent = seg.name.replace('\n',' ');
+    document.getElementById('resultOverlay').classList.add('show');
+    launchConfetti();
+}
+function closeResult() {
+    document.getElementById('resultOverlay').classList.remove('show');
+}
+
+/* ============================================================
+   CONFETTI
+   ============================================================ */
+function launchConfetti() {
+    const colors=['#FF6348','#FFD700','#7BED9F','#70A1FF','#FF6B9D','#fff','#E31D0C','#FFA502'];
+    for (let i=0;i<160;i++) {
+        setTimeout(()=>{
+            const el=document.createElement('div');
+            el.className='confetti-piece';
+            const sz=6+Math.random()*10;
+            el.style.cssText=
+                `left:${Math.random()*100}vw;` +
+                `width:${sz}px;height:${sz}px;` +
+                `background:${colors[Math.floor(Math.random()*colors.length)]};` +
+                `border-radius:${Math.random()>.4?'50%':'3px'};` +
+                `animation-duration:${1.4+Math.random()*2.4}s;` +
+                `animation-delay:${Math.random()*.5}s;`;
+            document.body.appendChild(el);
+            setTimeout(()=>el.remove(), 4500);
+        }, i*14);
+    }
+}
+</script>
+</body>
+</html>
