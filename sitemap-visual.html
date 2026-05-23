@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sitemap – สหกรุ๊ปแฟร์&เฟส ครั้งที่ 30</title>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+    font-family: 'Kanit', sans-serif;
+    background: #f0f4f8;
+    padding: 30px 20px 60px;
+    color: #1a1a1a;
+}
+
+/* ---- TOP HEADER ---- */
+.page-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+.page-header h1 {
+    font-size: 2em; font-weight: 900;
+    color: #E31D0C;
+}
+.page-header p { color: #555; margin-top: 6px; font-size: 1em; }
+
+/* ---- SITE INFO ---- */
+.site-info {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+}
+.info-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 16px 24px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.08);
+    min-width: 200px;
+    text-align: center;
+}
+.info-card .label { font-size: .78em; color: #888; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.info-card .value { font-size: 1em; font-weight: 700; color: #1a1a1a; margin-top: 4px; word-break: break-all; }
+.info-card .value a { color: #E31D0C; text-decoration: none; }
+.info-card .value a:hover { text-decoration: underline; }
+
+/* ---- FLOW DIAGRAM ---- */
+.flow-title {
+    text-align: center;
+    font-size: 1.3em; font-weight: 900;
+    color: #333;
+    margin-bottom: 24px;
+}
+
+.flow {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+    max-width: 1100px;
+    margin: 0 auto 50px;
+}
+
+.screen-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300px;
+}
+
+.arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 60px;
+    font-size: 2em;
+    color: #E31D0C;
+    width: 50px;
+}
+
+/* ---- SCREEN MOCKUP ---- */
+.mockup {
+    width: 280px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0,0,0,.15);
+    border: 3px solid #ddd;
+}
+
+.mockup-bar {
+    background: #e0e0e0;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.dot { width:10px;height:10px;border-radius:50%; }
+.dot.r{background:#ff5f57;} .dot.y{background:#ffbd2e;} .dot.g{background:#28ca41;}
+.url-bar {
+    flex: 1; background:#fff; border-radius:6px;
+    padding:3px 8px; font-size:.68em; color:#666;
+    overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
+}
+
+.mockup-body {
+    padding: 12px 10px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Screen 1 – Main */
+.s1-bg  { background: linear-gradient(135deg, #7fd4f8, #c8eeff); }
+.s1-layout { display:flex; gap:8px; width:100%; align-items:center; }
+.s1-left { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
+.s1-title { font-size:1.4em; font-weight:900; font-style:italic; color:#E31D0C;
+    -webkit-text-stroke:1px #fff; line-height:1; }
+.s1-sub   { font-size:.85em; font-weight:900; font-style:italic; color:#E31D0C;
+    -webkit-text-stroke:.5px #fff; line-height:1; }
+.s1-tag   { font-size:.7em; color:#333; font-style:italic; border-bottom:2px solid #E86020;
+    padding-bottom:1px; }
+.s1-date  { background:#E31D0C; color:#fff; border-radius:50%;
+    width:48px; height:48px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    font-size:.5em; font-weight:900; line-height:1.2; }
+.s1-right { flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; }
+.s1-wheel { width:80px;height:80px;border-radius:50%;
+    border:4px solid #FFD700;
+    background: conic-gradient(
+        #B31B4E 0% 10%, #555 10% 20%, #B0102E 20% 30%, #3840A8 30% 40%, #228B45 40% 50%,
+        #D4547A 50% 60%, #2C2C2C 60% 70%, #D62B4A 70% 80%, #1E2370 80% 90%, #155D2F 90% 100%
+    );
+    box-shadow:0 0 0 3px #fff, 0 0 0 5px #FF6348;
+}
+.s1-btn { background:linear-gradient(135deg,#ff5030,#C9200A); color:#fff;
+    border:none; border-radius:20px; padding:5px 14px;
+    font-family:'Kanit',sans-serif; font-size:.72em; font-weight:700; cursor:pointer; }
+
+/* Screen 2 – Spinning */
+.s2-bg { background: linear-gradient(135deg, #7fd4f8, #c8eeff); }
+.s2-wheel {
+    width:90px;height:90px;border-radius:50%;
+    border:4px solid #FFD700;
+    background: conic-gradient(
+        #B31B4E 0% 10%, #555 10% 20%, #B0102E 20% 30%, #3840A8 30% 40%, #228B45 40% 50%,
+        #D4547A 50% 60%, #2C2C2C 60% 70%, #D62B4A 70% 80%, #1E2370 80% 90%, #155D2F 90% 100%
+    );
+    box-shadow:0 0 0 3px #fff, 0 0 0 5px #FF6348;
+    animation: spin-demo 1.5s linear infinite;
+}
+@keyframes spin-demo { to { transform: rotate(360deg); } }
+.s2-label { font-size:.75em; color:#444; font-weight:700; }
+
+/* Screen 3 – Result */
+.s3-bg { background: linear-gradient(135deg, #7fd4f8, #c8eeff); }
+.result-popup {
+    background:#fff; border-radius:14px;
+    padding:12px 14px;
+    box-shadow:0 0 0 3px #FF6348, 0 0 0 5px #FFD700;
+    text-align:center; width:100%;
+}
+.result-popup .emoji { font-size:1.4em; }
+.result-popup .brand-logo {
+    width:60px;height:45px;background:#f0f0f0;
+    border-radius:8px; border:2px solid #FFD700;
+    margin:6px auto; display:flex; align-items:center; justify-content:center;
+    font-size:.6em; color:#888;
+}
+.result-popup .brand-name { font-size:.78em; font-weight:900; color:#E31D0C; }
+.result-popup .close-btn {
+    background:#E31D0C; color:#fff; border:none; border-radius:12px;
+    padding:3px 12px; font-family:'Kanit',sans-serif; font-size:.65em;
+    font-weight:700; margin-top:6px; cursor:pointer;
+}
+
+/* ---- SCREEN LABEL ---- */
+.screen-label {
+    margin-top: 12px;
+    text-align: center;
+}
+.screen-label .num {
+    display: inline-block;
+    background: #E31D0C; color:#fff;
+    width:26px;height:26px; border-radius:50%;
+    line-height:26px; font-size:.85em; font-weight:900;
+    margin-bottom:4px;
+}
+.screen-label .name { font-size:1em; font-weight:900; color:#1a1a1a; }
+.screen-label .desc { font-size:.8em; color:#666; margin-top:2px; }
+
+/* ---- URL TABLE ---- */
+.url-section { max-width: 800px; margin: 0 auto; }
+.url-section h2 { font-size:1.2em; font-weight:900; color:#333; margin-bottom:14px; text-align:center; }
+table {
+    width:100%; border-collapse:collapse;
+    background:#fff; border-radius:14px; overflow:hidden;
+    box-shadow:0 2px 12px rgba(0,0,0,.08);
+}
+th { background:#E31D0C; color:#fff; padding:12px 16px; text-align:left; font-size:.88em; }
+td { padding:11px 16px; border-bottom:1px solid #f0f0f0; font-size:.88em; }
+tr:last-child td { border-bottom:none; }
+td:first-child { font-weight:700; }
+.tag { display:inline-block; padding:2px 10px; border-radius:10px; font-size:.78em; font-weight:700; }
+.tag.live  { background:#e8f8ee; color:#1a8a3a; }
+.tag.page  { background:#e8f0ff; color:#2255cc; }
+.tag.file  { background:#fff4e0; color:#c07800; }
+</style>
+</head>
+<body>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+    <h1>🗺️ Sitemap – สหกรุ๊ปแฟร์&เฟส ครั้งที่ 30</h1>
+    <p>วงล้อโชคดี Lucky Wheel · ภาพรวมโครงสร้างเว็บไซต์</p>
+</div>
+
+<!-- SITE INFO CARDS -->
+<div class="site-info">
+    <div class="info-card">
+        <div class="label">Railway URL</div>
+        <div class="value"><a href="https://sahagroupfair30-production.up.railway.app" target="_blank">sahagroupfair30-production<br>.up.railway.app</a></div>
+    </div>
+    <div class="info-card">
+        <div class="label">GitHub Pages URL</div>
+        <div class="value"><a href="https://buuny-hub.github.io/Sahagroupfair_30/" target="_blank">buuny-hub.github.io<br>/Sahagroupfair_30/</a></div>
+    </div>
+    <div class="info-card">
+        <div class="label">GitHub Repository</div>
+        <div class="value"><a href="https://github.com/Buuny-hub/Sahagroupfair_30" target="_blank">github.com/Buuny-hub<br>/Sahagroupfair_30</a></div>
+    </div>
+    <div class="info-card">
+        <div class="label">วันงาน</div>
+        <div class="value">25–28 มิ.ย. 2569<br>ไบเทค บางนา ฮอลล์ 98–100</div>
+    </div>
+</div>
+
+<!-- FLOW DIAGRAM TITLE -->
+<div class="flow-title">📱 User Flow – การทำงานของหน้าจอ</div>
+
+<!-- SCREEN FLOW -->
+<div class="flow">
+
+    <!-- SCREEN 1: MAIN -->
+    <div class="screen-box">
+        <div class="mockup">
+            <div class="mockup-bar">
+                <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+                <div class="url-bar">sahagroupfair30-production.up.railway.app</div>
+            </div>
+            <div class="mockup-body s1-bg">
+                <div class="s1-layout">
+                    <div class="s1-left">
+                        <div class="s1-title">สหกรุ๊ป</div>
+                        <div class="s1-sub">แฟร์&เฟส</div>
+                        <div class="s1-tag">ไปด้วยกันนะ</div>
+                        <div class="s1-date">25–28<br>มิ.ย.69</div>
+                        <div style="font-size:.55em;background:linear-gradient(135deg,#ff5030,#C9200A);color:#fff;border-radius:10px;padding:3px 8px;font-weight:700;margin-top:2px;">🎡 วงล้อโชคดี</div>
+                    </div>
+                    <div class="s1-right">
+                        <div class="s1-wheel"></div>
+                        <div class="s1-btn">หมุนเลย! 🎯</div>
+                        <div style="font-size:.55em;color:#444;">หมุนไปแล้ว: 0 ครั้ง</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="screen-label">
+            <div class="num">1</div>
+            <div class="name">หน้าหลัก (Main Screen)</div>
+            <div class="desc">แสดงชื่องาน + วงล้อพร้อมเล่น</div>
+        </div>
+    </div>
+
+    <div class="arrow">▶</div>
+
+    <!-- SCREEN 2: SPINNING -->
+    <div class="screen-box">
+        <div class="mockup">
+            <div class="mockup-bar">
+                <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+                <div class="url-bar">sahagroupfair30-production.up.railway.app</div>
+            </div>
+            <div class="mockup-body s2-bg">
+                <div style="font-size:.9em;font-weight:900;color:#E31D0C;font-style:italic;-webkit-text-stroke:.5px #fff;">สหกรุ๊ป แฟร์&เฟส</div>
+                <div class="s2-wheel"></div>
+                <div class="s2-label">⏳ กำลังหมุน...</div>
+                <div style="font-size:.65em;background:linear-gradient(135deg,#ff5030,#C9200A);color:#fff;border-radius:12px;padding:4px 14px;font-weight:700;opacity:.5;">หมุนเลย! 🎯</div>
+            </div>
+        </div>
+        <div class="screen-label">
+            <div class="num">2</div>
+            <div class="name">กำลังหมุน (Spinning)</div>
+            <div class="desc">วงล้อหมุน ปุ่ม disabled</div>
+        </div>
+    </div>
+
+    <div class="arrow">▶</div>
+
+    <!-- SCREEN 3: RESULT -->
+    <div class="screen-box">
+        <div class="mockup">
+            <div class="mockup-bar">
+                <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+                <div class="url-bar">sahagroupfair30-production.up.railway.app</div>
+            </div>
+            <div class="mockup-body s3-bg">
+                <div class="result-popup">
+                    <div class="emoji">🎉 ยินดีด้วย! 🎉</div>
+                    <div class="brand-logo">โลโก้แบรนด์</div>
+                    <div class="brand-name">ชื่อแบรนด์</div>
+                    <div style="font-size:.65em;color:#666;margin:2px 0;">คุณได้รับรางวัลจากแบรนด์นี้!</div>
+                    <button class="close-btn">ปิด ✕</button>
+                </div>
+            </div>
+        </div>
+        <div class="screen-label">
+            <div class="num">3</div>
+            <div class="name">ผลรางวัล (Result)</div>
+            <div class="desc">แสดงโลโก้แบรนด์ที่ได้รับ + confetti</div>
+        </div>
+    </div>
+
+</div>
+
+<!-- URL TABLE -->
+<div class="url-section">
+    <h2>📋 ไฟล์และ URL ทั้งหมด</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>หน้า / ไฟล์</th>
+                <th>URL</th>
+                <th>ประเภท</th>
+                <th>คำอธิบาย</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>หน้าหลัก (Railway)</td>
+                <td><a href="https://sahagroupfair30-production.up.railway.app" target="_blank">sahagroupfair30-production.up.railway.app</a></td>
+                <td><span class="tag live">Live</span></td>
+                <td>วงล้อโชคดี (nginx + Docker)</td>
+            </tr>
+            <tr>
+                <td>หน้าหลัก (GitHub Pages)</td>
+                <td><a href="https://buuny-hub.github.io/Sahagroupfair_30/" target="_blank">buuny-hub.github.io/Sahagroupfair_30/</a></td>
+                <td><span class="tag page">Pages</span></td>
+                <td>วงล้อโชคดี (static)</td>
+            </tr>
+            <tr>
+                <td>index.html</td>
+                <td>/index.html</td>
+                <td><span class="tag file">File</span></td>
+                <td>ไฟล์หน้าหลักเกมวงล้อ</td>
+            </tr>
+            <tr>
+                <td>sitemap.xml</td>
+                <td>/sitemap.xml</td>
+                <td><span class="tag file">SEO</span></td>
+                <td>Sitemap สำหรับ search engine</td>
+            </tr>
+            <tr>
+                <td>sitemap-visual.html</td>
+                <td>/sitemap-visual.html</td>
+                <td><span class="tag file">File</span></td>
+                <td>หน้า sitemap แบบภาพนี้</td>
+            </tr>
+            <tr>
+                <td>โลโก้ Wacoal</td>
+                <td>/Logowacoal-01-scaled.jpg</td>
+                <td><span class="tag file">Image</span></td>
+                <td>โลโก้แบรนด์ Wacoal</td>
+            </tr>
+            <tr>
+                <td>โลโก้ Guy Laroche</td>
+                <td>/Logo-Guy-Laroche-Innerwear.jpg</td>
+                <td><span class="tag file">Image</span></td>
+                <td>โลโก้แบรนด์ Guy Laroche Innerwear</td>
+            </tr>
+            <tr>
+                <td>โลโก้ BSC Cosmetology</td>
+                <td>/BSC-Cosmetology.jpeg</td>
+                <td><span class="tag file">Image</span></td>
+                <td>โลโก้แบรนด์ BSC Cosmetology</td>
+            </tr>
+            <tr>
+                <td>โลโก้ Enfant</td>
+                <td>/Logo-Enfant-Blue.jpg</td>
+                <td><span class="tag file">Image</span></td>
+                <td>โลโก้แบรนด์ Enfant</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
