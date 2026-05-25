@@ -198,7 +198,7 @@
 
 <script>
 async function submitMember() {
-    const input = document.getElementById('memberId');
+    const input  = document.getElementById('memberId');
     const errMsg = document.getElementById('errMsg');
     const btn    = document.getElementById('submitBtn');
     const id     = input.value.trim();
@@ -207,25 +207,22 @@ async function submitMember() {
     if (!id) { errMsg.textContent = '⚠️ กรุณากรอกรหัสสมาชิก'; input.focus(); return; }
 
     btn.disabled = true;
-    btn.textContent = 'กำลังส่งข้อมูล...';
+    btn.textContent = 'กำลังโหลด...';
 
+    /* ── Best-effort save to backend (3 s timeout) ── */
     try {
-        const res  = await fetch('/api/register', {
+        const ctrl = new AbortController();
+        setTimeout(() => ctrl.abort(), 3000);
+        await fetch('/api/register', {
             method:  'POST',
             headers: { 'Content-Type': 'application/json' },
             body:    JSON.stringify({ memberId: id }),
+            signal:  ctrl.signal,
         });
-        const data = await res.json();
-        if (data.success) {
-            window.location.href = '/game.html';
-        } else {
-            errMsg.textContent = data.error || 'เกิดข้อผิดพลาด กรุณาลองใหม่';
-            btn.disabled = false; btn.textContent = 'เข้าร่วมสนุก! 🎡';
-        }
-    } catch {
-        /* No backend (static hosting) – go directly to game */
-        window.location.href = '/game.html';
-    }
+    } catch { /* ignore – proceed regardless */ }
+
+    /* ── Always go to game ── */
+    window.location.href = 'game.html';
 }
 
 document.getElementById('memberId').addEventListener('keypress', e => {
