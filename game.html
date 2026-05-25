@@ -476,39 +476,47 @@ function drawWheel(){
         ctx.fillStyle=seg.color; ctx.fill();
         ctx.strokeStyle='rgba(255,255,255,.55)'; ctx.lineWidth=1.5; ctx.stroke();
 
-        /* product image — fit inside segment (constrain by arc width) */
-        const lr=R*0.63, lx=CX+lr*Math.cos(mid), ly=CY+lr*Math.sin(mid);
-
-        /* max tangential width at this radius = chord of one segment × safety */
-        const maxTang = 2 * lr * Math.sin(ARC / 2) * 0.82;
-        /* max radial height = room between hub and outer ring */
-        const maxRad  = (R - SIZE * 0.075) * 0.78;
+        /* ── product image: clip to annular sector, fill segment ── */
+        const hubRi   = SIZE * 0.085;                          // inner exclusion (hub + gap)
+        const lr      = R * 0.65;                              // image-centre radius
+        const lx      = CX + lr * Math.cos(mid);
+        const ly      = CY + lr * Math.sin(mid);
+        /* 12 % overshoot on width → clipped cleanly by sector boundary */
+        const maxTang = 2 * lr * Math.sin(ARC / 2) * 1.12;
+        /* use nearly full radial span between hub and rim */
+        const maxRad  = (R - hubRi) * 0.90;
 
         ctx.save();
-        ctx.translate(lx,ly);
-        ctx.rotate(mid+Math.PI/2);
+        /* clip to annular sector: outside hub gap, inside wheel rim */
+        ctx.beginPath();
+        ctx.arc(CX, CY, R - 1,     start, end);
+        ctx.arc(CX, CY, hubRi + 2, end,   start, true);
+        ctx.closePath();
+        ctx.clip();
 
-        const img=imgCache[seg.file];
+        ctx.translate(lx, ly);
+        ctx.rotate(mid + Math.PI/2);
+
+        const img = imgCache[seg.file];
         if(img){
-            const ar=img.naturalWidth/img.naturalHeight;
-            /* contain inside maxTang × maxRad box */
+            const ar = img.naturalWidth / img.naturalHeight;
+            /* contain: preserve aspect ratio, fill as much of segment as possible */
             let dw = maxTang;
             let dh = dw / ar;
             if(dh > maxRad){ dh = maxRad; dw = dh * ar; }
-
-            ctx.shadowColor='rgba(0,0,0,.28)';
-            ctx.shadowBlur=7; ctx.shadowOffsetY=2;
-            ctx.drawImage(img,-dw/2,-dh/2,dw,dh);
+            ctx.shadowColor='rgba(0,0,0,.32)';
+            ctx.shadowBlur=8; ctx.shadowOffsetY=3;
+            ctx.drawImage(img, -dw/2, -dh/2, dw, dh);
             ctx.shadowColor='transparent'; ctx.shadowBlur=0;
         } else if(img === null){
-            /* image failed to load — text fallback, sized from maxTang */
+            /* image failed — text fallback */
             ctx.fillStyle='rgba(255,255,255,.85)';
             ctx.font=`bold ${maxTang*0.18}px 'Kanit',sans-serif`;
             ctx.textAlign='center'; ctx.textBaseline='middle';
-            const words=seg.name.split(' ').slice(0,2);
+            const words = seg.name.split(' ').slice(0,2);
             words.forEach((w,j)=>ctx.fillText(w,0,(j-(words.length-1)/2)*maxTang*0.22));
         }
-        /* if img===undefined (still loading): leave segment colour only — no crash */
+        /* img===undefined: still loading — segment colour only, no crash */
         ctx.restore();
     }
 
