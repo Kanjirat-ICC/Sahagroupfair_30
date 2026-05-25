@@ -384,20 +384,21 @@ const MEMBER_ID = sessionStorage.getItem('memberId') || 'guest';
    PRODUCT DATA  (10 segments, alternating M100 / C100M67K38)
 ════════════════════════════════════════════════════════════ */
 const PRODUCTS = [
-    'BSC_HoneiV_HYA Serum.png',
-    'BSC_HoneiV_Sunscreen.png',
-    'BSC_Honey Yuzu.png',
-    'Enfant_Wipes extra mild.png',
-    'Sheene_Airy Powder.png',
-    'Sheene_Airy Soft Matte Lip.png',
-    'Sheene_Lip Nude.png',
-    'Sheene_Lip Pink.png',
-    'Sheene_loose powder.png',
-    'Sheene_Powder.png',
+    'BSC-Honei-V-box-HYA-Serum.png',
+    'BSC-Honei-V-Sunscreen.png',
+    'BSC HoneiVHoney-yuzu.png',
+    'Enfant-Wipes_extra-mild.png',
+    'Sheene-Airy-Powder-Cake.png',
+    'Sheene-Airy-Soft-Matte-Lip.png',
+    'Sheene lip matt.png',
+    'Sheene lip.png',
+    'Sheene Loose Powder.png',
+    'Sheene Powder.png',
 ];
 const SEG_COLORS = ['#EC008C', '#00349E'];   // M100 | C100M67K38
 
-function fileToName(f){ return f.replace(/\.png$/i,'').replace(/_/g,' '); }
+/* replace hyphens AND underscores with spaces for display */
+function fileToName(f){ return f.replace(/\.png$/i,'').replace(/[-_]/g,' '); }
 
 const segments = PRODUCTS.map((file,i)=>({ file, name:fileToName(file), color:SEG_COLORS[i%2] }));
 const N   = segments.length;
