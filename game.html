@@ -377,8 +377,9 @@
 </div>
 
 <script>
-/* ── Member ID (passed from index.html via sessionStorage) ── */
-const MEMBER_ID = sessionStorage.getItem('memberId') || 'guest';
+/* ── Member ID guard: ถ้าไม่มี ID → กลับหน้ากรอก ── */
+const MEMBER_ID = sessionStorage.getItem('memberId');
+if (!MEMBER_ID) { window.location.replace('index.html'); }
 
 /* ════════════════════════════════════════════════════════════
    PRODUCT DATA  (10 segments, alternating M100 / C100M67K38)
@@ -387,14 +388,14 @@ const PRODUCTS = [
     { file: 'HONEI V BSC HYA ROYAL HONEY SERUM.png',    name: 'HONEI V BSC HYA Royal Honey Serum' },
     { file: 'HONEI V BSC AGE DEFENCE SUNSCREEN.png',    name: 'HONEI V BSC Age Defence Sunscreen' },
     { file: 'HONEI V BSC HONEY YUZU WHIP FOAM.png',     name: 'HONEI V BSC Honey Yuzu Whip Foam' },
-    { file: 'ENFANT Extra Mild Face & Body Wipes .png', name: 'ENFANT Extra Mild Face & Body Wipes' },
+    { file: 'ENFANT Extra Mild Face & Body Wipes.png',  name: 'ENFANT Extra Mild Face & Body Wipes' },
     { file: 'SHEENE AIRY POWDER 3.5 กรัม.png',          name: 'SHEENE Airy Powder 3.5 กรัม' },
     { file: 'SHEENE AIRY POWDER 6 กรัม.png',            name: 'SHEENE Airy Powder 6 กรัม' },
     { file: 'SHEENE AIRY LIP TINT GLOSS.png',          name: 'SHEENE Airy Lip Tint Gloss' },
     { file: 'SHEENE AIRY MATTE LIP.png',                name: 'SHEENE Airy Matte Lip' },
     { file: 'SHEENE LIP GLOSS.png',                     name: 'SHEENE Lip Gloss' },
     { file: 'SHEENE OIL FREE CAKE POWDER.png',          name: 'SHEENE Oil Free Cake Powder' },
-    { file: 'Good Age Diapers .png',                    name: 'GoodAge กู๊ดเอจ Adult Diapers' },
+    { file: 'Good Age Diapers.png',                     name: 'GoodAge กู๊ดเอจ Adult Diapers' },
 ];
 const SEG_COLORS = ['#EC008C', '#00349E'];   // M100 | C100M67K38
 

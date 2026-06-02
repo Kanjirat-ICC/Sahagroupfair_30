@@ -51,6 +51,19 @@ app.post('/api/save', (req, res) => {
     res.json({ success: true });
 });
 
+/* ────────────────────────────────────────────────
+   API: check if member has already played
+   GET /api/check/:id  →  { played: bool, product? }
+──────────────────────────────────────────────── */
+app.get('/api/check/:id', (req, res) => {
+    const id = (req.params.id || '').trim();
+    if (!id) return res.status(400).json({ error: 'กรุณากรอกรหัสสมาชิก' });
+    const members = readMembers();
+    const found = members.find(m => m.id === id && m.product && m.product !== '-');
+    if (found) return res.json({ played: true, product: found.product });
+    return res.json({ played: false });
+});
+
 /* ── (legacy) register without product ── */
 app.post('/api/register', (req, res) => {
     const id = (req.body.memberId || '').trim();

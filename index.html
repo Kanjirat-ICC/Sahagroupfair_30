@@ -197,7 +197,7 @@
 </div>
 
 <script>
-function submitMember() {
+async function submitMember() {
     const input  = document.getElementById('memberId');
     const errMsg = document.getElementById('errMsg');
     const btn    = document.getElementById('submitBtn');
@@ -206,9 +206,24 @@ function submitMember() {
     errMsg.textContent = '';
     if (!id) { errMsg.textContent = '⚠️ กรุณากรอกรหัสสมาชิก'; input.focus(); return; }
 
-    /* ── Store ID so game.html can read it, then redirect ── */
-    sessionStorage.setItem('memberId', id);
     btn.disabled = true;
+    btn.textContent = 'กำลังตรวจสอบ...';
+
+    try {
+        const res  = await fetch(`/api/check/${encodeURIComponent(id)}`);
+        const data = await res.json();
+        if (data.played) {
+            errMsg.textContent = `⚠️ รหัสนี้เคยร่วมกิจกรรมแล้ว (ได้รับ: ${data.product})`;
+            btn.disabled = false;
+            btn.textContent = 'เข้าร่วมสนุก! 🎡';
+            return;
+        }
+    } catch (e) {
+        /* ถ้า API ไม่ตอบ (offline/error) → ให้ผ่านไปก่อน */
+    }
+
+    /* ── ยังไม่เคยเล่น → ไป game.html ── */
+    sessionStorage.setItem('memberId', id);
     btn.textContent = 'กำลังโหลด...';
     window.location.href = 'game.html';
 }
