@@ -13,6 +13,29 @@ const ADMIN_PASS = process.env.ADMIN_PASS || 'sahagroup30';
 if (!fs.existsSync(DATA_DIR))  fs.mkdirSync(DATA_DIR, { recursive: true });
 if (!fs.existsSync(DATA_FILE)) fs.writeFileSync(DATA_FILE, '[]', 'utf8');
 
+/* ── Stock management ── */
+const STOCK_FILE   = path.join(DATA_DIR, 'stock.json');
+const PRODUCT_NAMES = [
+    'SHEENE Airy Powder 3.5 กรัม',
+    'SHEENE Airy Powder 6 กรัม',
+    'SHEENE Airy Matte Lip',
+    'SHEENE Airy Lip Tint Gloss',
+    'SHEENE Lip Gloss',
+    'SHEENE Oil Free Cake Powder',
+    'HONEI V BSC Age Defence Sunscreen',
+    'HONEI V BSC HYA Royal Honey Serum',
+    'HONEI V BSC Honey Yuzu Whip Foam',
+    'ENFANT Extra Mild Face & Body Wipes',
+    'GoodAge กู๊ดเอจ Adult Diapers',
+];
+function defaultStock(){ const s={}; PRODUCT_NAMES.forEach(n=>s[n]=50); return s; }
+function readStock(){
+    try { return JSON.parse(fs.readFileSync(STOCK_FILE,'utf8')); }
+    catch { return defaultStock(); }
+}
+function writeStock(obj){ fs.writeFileSync(STOCK_FILE, JSON.stringify(obj,null,2),'utf8'); }
+if(!fs.existsSync(STOCK_FILE)) writeStock(defaultStock());
+
 function readMembers() {
     try { return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8')); }
     catch { return []; }
@@ -40,6 +63,14 @@ app.post('/api/save', (req, res) => {
 
     if (!id) return res.status(400).json({ error: 'กรุณากรอกรหัสสมาชิก' });
 
+    /* หักสต๊อกสินค้าที่ได้รับ */
+    if (product !== '-') {
+        const stock = readStock();
+        if (typeof stock[product] === 'number')
+            stock[product] = Math.max(0, stock[product] - 1);
+        writeStock(stock);
+    }
+
     const members = readMembers();
     members.push({
         id,
@@ -49,6 +80,25 @@ app.post('/api/save', (req, res) => {
     });
     writeMembers(members);
     res.json({ success: true });
+});
+
+/* ────────────────────────────────────────────────
+   API: stock levels (used by game.html on load)
+──────────────────────────────────────────────── */
+app.get('/api/stock', (req, res) => res.json(readStock()));
+
+/* ────────────────────────────────────────────────
+   Admin: update stock
+   POST /admin/stock  Body: { productName: qty, ... }
+──────────────────────────────────────────────── */
+app.post('/admin/stock', (req, res) => {
+    const stock = readStock();
+    Object.entries(req.body).forEach(([name, qty]) => {
+        const n = parseInt(qty);
+        if (!isNaN(n) && n >= 0) stock[name] = n;
+    });
+    writeStock(stock);
+    res.json({ success: true, stock });
 });
 
 /* ────────────────────────────────────────────────
@@ -102,14 +152,29 @@ app.get('/admin/export', (req, res) => {
    Admin: HTML dashboard (no password required)
 ──────────────────────────────────────────────── */
 app.get('/admin', (req, res) => {
-    const pass = '';   // kept for export link compatibility
-
+    const pass = '';
     const members = readMembers();
+    const stock   = readStock();
 
     /* stats */
-    const total   = members.length;
-    const played  = members.filter(m => m.product && m.product !== '-').length;
-    const pending = total - played;
+    const total      = members.length;
+    const played     = members.filter(m => m.product && m.product !== '-').length;
+    const pending    = total - played;
+    const totalStock = Object.values(stock).reduce((a,b)=>a+b, 0);
+
+    /* stock cards */
+    const stockCards = Object.entries(stock).map(([name, qty]) => {
+        const border = qty === 0 ? '#dc3545' : qty <= 10 ? '#e67e22' : '#28a745';
+        const label  = qty === 0 ? '⛔ หมด' : qty <= 10 ? '⚠️ น้อย' : '✅ พร้อม';
+        return `<div style="background:#fff;border-radius:12px;padding:12px 14px;box-shadow:0 2px 8px rgba(0,0,0,.08);border-left:4px solid ${border}">
+            <div style="font-size:.8em;color:#555;margin-bottom:8px;font-weight:700;line-height:1.3">${name}</div>
+            <div style="display:flex;align-items:center;gap:8px">
+                <input type="number" class="stock-input" data-name="${name.replace(/"/g,'&quot;')}" value="${qty}" min="0"
+                       style="width:72px;padding:6px 4px;border:2px solid #ddd;border-radius:8px;font-family:'Kanit',sans-serif;font-weight:700;font-size:1.05em;text-align:center">
+                <span style="font-size:.82em;font-weight:700;color:${border}">${label}</span>
+            </div>
+        </div>`;
+    }).join('');
 
     /* product frequency */
     const freq = {};
@@ -184,11 +249,24 @@ app.get('/admin', (req, res) => {
 
 <!-- Stats -->
 <div class="stat-row">
-  <div class="stat red">  <div class="num">${total}</div>  <div class="lbl">สมาชิกทั้งหมด</div></div>
-  <div class="stat green"><div class="num">${played}</div> <div class="lbl">เล่นแล้ว</div></div>
-  <div class="stat blue"> <div class="num">${pending}</div><div class="lbl">ยังไม่เล่น</div></div>
-  <div class="stat pink"> <div class="num">${topProduct ? topProduct[1] : 0}</div>
-    <div class="lbl">${topProduct ? topProduct[0].split(' ').slice(0,2).join(' ') : 'สินค้ายอดนิยม'}</div></div>
+  <div class="stat red">  <div class="num">${total}</div>     <div class="lbl">สมาชิกทั้งหมด</div></div>
+  <div class="stat green"><div class="num">${played}</div>    <div class="lbl">เล่นแล้ว</div></div>
+  <div class="stat blue"> <div class="num">${pending}</div>   <div class="lbl">ยังไม่เล่น</div></div>
+  <div class="stat pink"> <div class="num">${totalStock}</div><div class="lbl">สต๊อกรวม</div></div>
+</div>
+
+<!-- Stock Management -->
+<div style="margin-bottom:20px">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+    <h2 style="color:#C9200A;font-size:1.1em;font-weight:900">📦 จัดการสต๊อกสินค้า</h2>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-gray" onclick="resetStock()">↺ รีเซ็ต 50 ทุกรายการ</button>
+      <button class="btn btn-green" onclick="saveStock()">💾 บันทึกสต๊อก</button>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px">
+    ${stockCards}
+  </div>
 </div>
 
 <!-- Search -->
@@ -219,6 +297,18 @@ app.get('/admin', (req, res) => {
 </p>
 
 <script>
+async function saveStock(){
+    const inputs = document.querySelectorAll('.stock-input');
+    const body = {};
+    inputs.forEach(inp => body[inp.dataset.name] = parseInt(inp.value)||0);
+    const r = await fetch('/admin/stock',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if((await r.json()).success){ location.reload(); }
+}
+function resetStock(){
+    if(!confirm('รีเซ็ตสต๊อกทุกรายการเป็น 50?')) return;
+    document.querySelectorAll('.stock-input').forEach(inp=>inp.value=50);
+    saveStock();
+}
 function filterTable(){
     const q   = document.getElementById('searchInput').value.toLowerCase();
     const rows = document.querySelectorAll('#tbody tr');

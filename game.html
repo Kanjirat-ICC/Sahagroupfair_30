@@ -359,7 +359,7 @@
             <canvas id="wheelCanvas"></canvas>
         </div>
         <div class="btn-area">
-            <button id="spinBtn" onclick="spin()">หมุนเลย!&ensp;🎯</button>
+            <button id="spinBtn" onclick="spin()" disabled>หมุนเลย!&ensp;🎯</button>
             <div id="spinCount">หมุนไปแล้ว: <span id="countNum">0</span> ครั้ง</div>
         </div>
     </div>
@@ -400,9 +400,8 @@ const PRODUCTS = [
 ];
 const SEG_COLORS = ['#EC008C', '#00349E'];   // M100 | C100M67K38
 
-const segments = PRODUCTS.map((p,i)=>({ file: p.file, name: p.name, color: SEG_COLORS[i%2] }));
-const N   = segments.length;
-const ARC = (2*Math.PI)/N;
+/* segments / N / ARC set dynamically after stock fetch */
+let segments = [], N = 0, ARC = 0;
 
 /* ════════════════════════════════════════════════════════════
    CANVAS SETUP
@@ -439,9 +438,26 @@ const imgCache = {};
 PRODUCTS.forEach(p=>{
     const img=new Image();
     img.src=p.file;
-    img.onload =()=>{ imgCache[p.file]=img;  drawWheel(); };
-    img.onerror=()=>{ imgCache[p.file]=null; drawWheel(); };
+    img.onload =()=>{ imgCache[p.file]=img;  if(N) drawWheel(); };
+    img.onerror=()=>{ imgCache[p.file]=null; if(N) drawWheel(); };
 });
+
+/* ── Fetch stock → filter active products → build wheel ── */
+(async function initWheel(){
+    let active = PRODUCTS;
+    try {
+        const res   = await fetch('/api/stock');
+        const stock = await res.json();
+        const ok    = PRODUCTS.filter(p => (stock[p.name] ?? 1) > 0);
+        if (ok.length > 0) active = ok;
+    } catch(e) { /* offline: show all products */ }
+    segments = active.map((p,i)=>({ file:p.file, name:p.name, color:SEG_COLORS[i%2] }));
+    N   = segments.length;
+    ARC = (2*Math.PI)/N;
+    angle = -Math.PI/2 - ARC/2;
+    document.getElementById('spinBtn').disabled = false;
+    drawWheel();
+})();
 
 /* ── Hub (center) mascot ── */
 let hubMascotImg = null;
@@ -455,9 +471,10 @@ let centerShake = 0, shakePhase = 0;
 /* ════════════════════════════════════════════════════════════
    DRAW WHEEL
 ════════════════════════════════════════════════════════════ */
-let angle = -Math.PI/2 - ARC/2;
+let angle = 0;   /* set properly in initWheel() */
 
 function drawWheel(){
+    if (!N) return;
     ctx.clearRect(0,0,SIZE,SIZE);
 
     /* gold border */
@@ -547,15 +564,13 @@ function drawWheel(){
     ctx.fillStyle='rgba(255,255,255,.65)'; ctx.fill();
 }
 
-drawWheel();
-
 /* ════════════════════════════════════════════════════════════
    SPIN  —  FIXED target angle formula
 ════════════════════════════════════════════════════════════ */
 let spinning=false, spinCount=0;
 
 function spin(){
-    if(spinning) return;
+    if(!N || spinning) return;
     spinning=true;
     document.getElementById('spinBtn').disabled=true;
 
