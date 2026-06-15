@@ -55,14 +55,14 @@
             position:relative; z-index:2;
         }
         .col-left {
-            flex:0 0 42%;
+            flex:0 0 30%;
             display:flex; flex-direction:column; align-items:center; justify-content:center;
-            padding:10px 12px;
+            padding:10px 8px;
         }
         .col-right {
-            flex:0 0 58%;
+            flex:0 0 70%;
             display:flex; flex-direction:column; align-items:center; justify-content:center;
-            padding:10px 10px;
+            padding:4px 6px;
         }
 
         /* ══════════════════════════════════════════════
@@ -166,34 +166,64 @@
         .date-month {font-size:clamp(.64em,1.5vw,.94em);  font-weight:700;}
         .date-venue {font-size:clamp(.5em, 1.2vw,.76em);  font-weight:700; opacity:.92; line-height:1.15;}
 
-        /* ── Mascots row – invite/wave animation ── */
-        .mascot-row {
+        /* ── Wheel scene: mascots + wheel + stand ── */
+        .wheel-scene {
             display:flex; align-items:flex-end; justify-content:center;
-            gap:clamp(2px,.6vw,8px);
-            width:100%;
-            margin-top:clamp(12px,1.8vw,20px);
-            overflow:visible;
+            width:100%; overflow:visible; position:relative;
         }
-        .mascot-row img {
-            height:clamp(68px,9.5vw,148px); width:auto;
-            animation:mascotInvite ease-in-out infinite;
-            pointer-events:none;
+        .wheel-center {
+            display:flex; flex-direction:column; align-items:center;
+            flex-shrink:0; position:relative; z-index:2;
+        }
+        /* red stand below wheel */
+        .wheel-stand {
+            width:62%; height:clamp(14px,2.4vw,32px);
+            background:radial-gradient(ellipse at 50% 0%,#ff5030,#C9200A 80%);
+            border-radius:50%/100%;
+            box-shadow:0 5px 0 rgba(120,14,0,.55),0 7px 16px rgba(220,30,0,.4);
+            margin-top:-3px; position:relative; z-index:1;
+        }
+        .wheel-stand::after{
+            content:''; position:absolute;
+            bottom:-10px; left:12%; width:76%; height:clamp(8px,1.4vw,18px);
+            background:linear-gradient(180deg,#C9200A,#a01000);
+            border-radius:50%; box-shadow:0 4px 0 rgba(100,8,0,.5);
+        }
+        /* left mascot */
+        .mascot-l {
+            height:clamp(100px,19vw,260px); width:auto;
+            align-self:flex-end; flex-shrink:0;
+            margin-right:clamp(-30px,-3vw,-10px);
+            z-index:3; pointer-events:none;
+            filter:drop-shadow(3px 4px 8px rgba(0,0,0,.22));
+            animation:mascotBob 2.4s ease-in-out infinite;
             transform-origin:bottom center;
         }
-        /* staggered delays per mascot */
-        .mascot-row img:nth-child(1){animation-duration:2.1s;animation-delay:0s;}
-        .mascot-row img:nth-child(2){animation-duration:2.4s;animation-delay:0.35s;}
-        .mascot-row img:nth-child(3){animation-duration:2.0s;animation-delay:0.70s;}
-        .mascot-row img:nth-child(4){animation-duration:2.3s;animation-delay:1.05s;}
-        .mascot-row img:nth-child(5){animation-duration:2.2s;animation-delay:1.40s;}
-        /* beckoning / invite animation */
-        @keyframes mascotInvite {
-            0%   {transform:rotate(-7deg) translateY(0px);   }
-            18%  {transform:rotate( 6deg) translateY(-13px); }
-            38%  {transform:rotate(-4deg) translateY(-8px);  }
-            58%  {transform:rotate( 7deg) translateY(-16px); }
-            78%  {transform:rotate(-3deg) translateY(-6px);  }
-            100% {transform:rotate(-7deg) translateY(0px);   }
+        /* right mascots stack */
+        .mascots-r {
+            display:flex; flex-direction:column; align-items:flex-start;
+            align-self:flex-end; flex-shrink:0;
+            margin-left:clamp(-30px,-3vw,-10px);
+            gap:0; z-index:3; pointer-events:none;
+        }
+        .mascots-r img {
+            width:auto; pointer-events:none;
+            filter:drop-shadow(3px 4px 8px rgba(0,0,0,.22));
+            transform-origin:bottom center;
+        }
+        .mascots-r img:nth-child(1){
+            height:clamp(80px,14vw,190px);
+            animation:mascotBob 2.1s ease-in-out infinite;
+            animation-delay:.5s;
+        }
+        .mascots-r img:nth-child(2){
+            height:clamp(60px,10vw,140px);
+            animation:mascotBob 2.6s ease-in-out infinite;
+            animation-delay:1.1s;
+        }
+        @keyframes mascotBob{
+            0%,100%{transform:translateY(0);}
+            50%    {transform:translateY(clamp(-6px,-1vw,-4px));}
         }
 
         /* ══════════════════════════════════════════════
@@ -336,27 +366,33 @@
             </div>
         </div>
 
-        <!-- Mascots row – invite animation below text -->
-        <div class="mascot-row">
-            <img src="Mascot_01.png" alt="">
-            <img src="Mascot_02.png" alt="">
-            <img src="Mascot_03.png" alt="">
-            <img src="Mascot_04.png" alt="">
-            <img src="Mascot_05.png" alt="">
-        </div>
-
     </div>
 
     <!-- ════════════ RIGHT: วงล้อ ════════════ -->
     <div class="col-right">
-        <div class="wheel-wrap" id="wheelWrap">
-            <div class="outer-ring"  id="outerRing"></div>
-            <div class="lights-ring" id="lightsRing"></div>
-            <div class="pointer-wrap">
-                <div class="pointer-head"></div>
-                <div class="pointer-base"></div>
+        <div class="wheel-scene">
+            <!-- mascot ซ้าย -->
+            <img class="mascot-l" src="Mascot_02.png" alt="">
+
+            <!-- วงล้อ + ฐาน -->
+            <div class="wheel-center">
+                <div class="wheel-wrap" id="wheelWrap">
+                    <div class="outer-ring"  id="outerRing"></div>
+                    <div class="lights-ring" id="lightsRing"></div>
+                    <div class="pointer-wrap">
+                        <div class="pointer-head"></div>
+                        <div class="pointer-base"></div>
+                    </div>
+                    <canvas id="wheelCanvas"></canvas>
+                </div>
+                <div class="wheel-stand"></div>
             </div>
-            <canvas id="wheelCanvas"></canvas>
+
+            <!-- mascots ขวา -->
+            <div class="mascots-r">
+                <img src="Mascot_03.png" alt="">
+                <img src="Mascot_04.png" alt="">
+            </div>
         </div>
         <div class="btn-area">
             <button id="spinBtn" onclick="spin()" disabled>หมุนเลย!&ensp;🎯</button>
