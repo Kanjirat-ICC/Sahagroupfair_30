@@ -505,9 +505,9 @@ PRODUCTS.forEach(p=>{
 (async function initWheel(){
     let active = PRODUCTS;
     try {
-        const res   = await fetch('/api/stock');
+        const res   = await fetch('/api/stock?t=' + Date.now());
         const stock = await res.json();
-        const ok    = PRODUCTS.filter(p => (stock[p.name] ?? 1) > 0);
+        const ok    = PRODUCTS.filter(p => (stock[p.name] ?? 0) > 0);
         if (ok.length > 0) active = ok;
     } catch(e) { /* offline: show all products */ }
     segments = active.map((p,i)=>({ file:p.file, name:p.name, color:SEG_COLORS[i%2] }));

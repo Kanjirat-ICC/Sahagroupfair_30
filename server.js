@@ -85,7 +85,10 @@ app.post('/api/save', (req, res) => {
 /* ────────────────────────────────────────────────
    API: stock levels (used by game.html on load)
 ──────────────────────────────────────────────── */
-app.get('/api/stock', (req, res) => res.json(readStock()));
+app.get('/api/stock', (req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
+    res.json(readStock());
+});
 
 /* ────────────────────────────────────────────────
    Admin: update stock
