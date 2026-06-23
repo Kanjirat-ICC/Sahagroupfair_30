@@ -458,6 +458,10 @@ const PRODUCTS = [
     { file: 'Game_2000x2000_11.png', name: 'GoodAge กู๊ดเอจ Adult Diapers' },
 ];
 const SEG_COLORS = ['#EC008C', '#00349E'];   // M100 | C100M67K38
+const PRODUCT_BY_NAME = PRODUCTS.reduce((map, product) => {
+    map[product.name] = product;
+    return map;
+}, {});
 
 /* segments / N / ARC set dynamically after stock fetch */
 let segments = [], N = 0, ARC = 0;
@@ -635,13 +639,78 @@ function drawWheel(){
 ════════════════════════════════════════════════════════════ */
 let spinning=false, spinCount=0;
 
-function spin(){
+function rebuildSegments(productNames){
+    const nextProducts = productNames
+        .map(name => PRODUCT_BY_NAME[name])
+        .filter(Boolean);
+    if (!nextProducts.length) return;
+    segments = nextProducts.map((p,i)=>({ file:p.file, name:p.name, color:SEG_COLORS[i%2] }));
+    N   = segments.length;
+    ARC = (2*Math.PI)/N;
+    angle = -Math.PI/2 - ARC/2;
+    drawWheel();
+}
+
+async function requestSpinResult(){
+    const res = await fetch('/api/spin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ memberId: MEMBER_ID }),
+    });
+    const data = await res.json().catch(()=>({}));
+    if (!res.ok) {
+        const err = new Error(data.error || 'spin_failed');
+        err.status = res.status;
+        err.data = data;
+        throw err;
+    }
+    return data;
+}
+
+async function spin(){
     if(!N || spinning) return;
     spinning=true;
-    document.getElementById('spinBtn').disabled=true;
+    const spinBtn = document.getElementById('spinBtn');
+    spinBtn.disabled=true;
+    spinBtn.textContent='กำลังตรวจสอบ...';
+
+    let assigned;
+    try {
+        assigned = await requestSpinResult();
+    } catch (err) {
+        spinning=false;
+        spinBtn.disabled=false;
+        spinBtn.textContent='หมุนเลย! 🎯';
+        if (err.status === 409 && err.data?.played) {
+            alert(`รหัสนี้เคยร่วมกิจกรรมแล้ว (ได้รับ: ${err.data.product})`);
+            sessionStorage.removeItem('memberId');
+            window.location.href = 'index.html';
+            return;
+        }
+        if (err.status === 409 && err.data?.error === 'out_of_stock') {
+            alert('สินค้าหมดแล้ว กรุณาติดต่อเจ้าหน้าที่');
+            return;
+        }
+        alert('ระบบกำลังยุ่ง กรุณาลองใหม่อีกครั้ง');
+        return;
+    }
+
+    if (Array.isArray(assigned.activeProducts)) {
+        rebuildSegments(assigned.activeProducts);
+    }
+
+    const targetSeg = segments.findIndex(segment => segment.name === assigned.product);
+    if (targetSeg < 0) {
+        spinning=false;
+        spinBtn.disabled=false;
+        spinBtn.textContent='หมุนเลย! 🎯';
+        alert('ไม่พบสินค้าที่ได้รับบนวงล้อ กรุณาโหลดหน้าใหม่');
+        return;
+    }
+
+    spinBtn.textContent='กำลังหมุน...';
     document.querySelector('.wheel-scene').classList.add('spinning');
 
-    const targetSeg=Math.floor(Math.random()*N);
     const extraRot =(6+Math.floor(Math.random()*5))*Math.PI*2;
 
     /* ✅ Fixed: include -π/2 offset so pointer lands on correct segment */
@@ -667,7 +736,8 @@ function spin(){
             centerShake=0; shakePhase=0;
             spinCount++;
             document.getElementById('countNum').textContent=spinCount;
-            document.getElementById('spinBtn').disabled=false;
+            spinBtn.disabled=true;
+            spinBtn.textContent='รับรางวัลแล้ว';
             showResult(segments[targetSeg]);
         }
     }
@@ -690,13 +760,6 @@ function showResult(seg){
     document.getElementById('resultName').textContent=seg.name;
     document.getElementById('resultOverlay').classList.add('show');
     launchConfetti();
-
-    /* ── Save member + product to backend (best-effort) ── */
-    fetch('/api/save', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ memberId: MEMBER_ID, product: seg.name }),
-    }).catch(()=>{});
 }
 
 function closeResult(){

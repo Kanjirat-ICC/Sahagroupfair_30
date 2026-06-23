@@ -220,7 +220,10 @@ async function submitMember() {
             return;
         }
     } catch (e) {
-        /* ถ้า API ไม่ตอบ (offline/error) → ให้ผ่านไปก่อน */
+        errMsg.textContent = 'ระบบกำลังยุ่ง กรุณาลองใหม่อีกครั้ง';
+        btn.disabled = false;
+        btn.textContent = 'เข้าร่วมสนุก! 🎡';
+        return;
     }
 
     /* ── ยังไม่เคยเล่น → ไป game.html ── */

@@ -4,9 +4,13 @@
   "description": "สหกรุ๊ปแฟร์&เฟส ครั้งที่ 30 – Lucky Spin",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "build:amplify": "node scripts/build-amplify.js"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "cookie-parser": "^1.4.7",
+    "express": "^4.18.2",
+    "express-rate-limit": "^8.2.1",
+    "googleapis": "^166.0.0"
   }
 }
