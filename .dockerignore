@@ -1,5 +1,10 @@
 .git
+.gitignore
+.github
+.gitattributes
 node_modules
 *.md
 nginx.conf.template
 start.sh
+railway.toml
+.DS_Store
